@@ -64,7 +64,7 @@ export interface BasketItem {
   priceText: string;
 }
 
-//Онсовная модель
+//Основная модель
 export interface AppState {
   items: Map<string, Item>;
 
@@ -145,7 +145,7 @@ export interface ISelectable<T> {
 }
 
 
-//Пример отображения конкретного товара – карточки товара
+//Пример отображения конкретного товара – карточки товара
 //Категории товаров
 export enum ItemCategory {
   softSkill = 'софт-скилл',
