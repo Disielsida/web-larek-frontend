@@ -156,7 +156,7 @@ export enum ItemCategory {
 }
 
 //Данные для отображения товара
-export interface itemData {
+export interface itemCardData {
   id: string;
   category: ItemCategory;
   title: string;
@@ -165,7 +165,7 @@ export interface itemData {
 }
 
 //Настройки для отображения товара(селекторы + OnClick)
-export interface itemSettings extends IClickable<string> {
+export interface itemCardSettings extends IClickable<string> {
   category: string;
   title: string;
   image: string;
