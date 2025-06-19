@@ -59,11 +59,11 @@ yarn build
 ## Базовые классы и их интерфейсы
 
 ### AppState
-Главная модель приложения. Отвечает за хранение всех данных и реализацию бизнес-логики.
+Главная модель приложения. Отвечает за хранение всех данных и реализацию бизнес-логики
 
-Интерфейс:
+***Интерфейс:***
 ```
-export interface AppState {
+interface AppState {
   items: Map<string, Item>;
 
   selectedProduct: Item | null;
@@ -99,7 +99,7 @@ export interface AppState {
   setErrorMessage(message: string | null): void;
 }
 ```
-Основные поля класса:
+***Основные поля класса:***
 - `items: Map<string, Item>` — список всех товаров
 - `basket: Map<string, BasketItem>` — корзина
 - `selectedProduct: Item | null` — выбранный товар
@@ -108,7 +108,7 @@ export interface AppState {
 - `basketTotalPrice`, `basketTotalCount` — агрегированные значения по корзине
 - `openedModal` — активное модальное окно
 
-Основные методы:
+***Основные методы:***
 - `loadItems()` — загрузка данных с сервера
 - `selectProduct(id: string)` — выбор товара
 - `addToBasket(id: string)` / `removeFromBasket(id: string)` — управление корзиной
@@ -119,6 +119,51 @@ export interface AppState {
 - `setErrorMessage()` — установка текста ошибки
 - `formatCurrency(value: number)` — форматирование цены
 - `openModal(modal: AppStateModals)` — управление модальными окнами
+
+
+## API: `ItemsApi`
+Класс взаимодействия с сервером
+
+***Интерфейс:***
+```
+interface ItemsApi {
+  getItems(): Promise<Item[]>;
+  orderItems(order: Order): Promise<OrderResult | null>;
+}
+```
+
+***Основные методы:***
+- `get(uri: string)` — выполнение GET-запроса для получения данных с сервера
+- `post(uri: string, data: object, method?: 'POST' | 'PUT' | 'DELETE')` — отправка запроса с телом `data` на сервер
+
+## EventEmitter
+Класс событийного брокера. Позволяет подписывать, отписывать и инициировать события:
+
+***Интерфейс:***
+```
+interface IEvents {
+    on<T extends object>(event: EventName, callback: (data: T) => void): void;
+    emit<T extends object>(event: string, data?: T): void;
+    trigger<T extends object>(event: string, context?: Partial<T>): (data: T) => void;
+}
+```
+
+- `on()` / `off()` — подписка и отписка на конкретные события
+- `emit()` — инициирование события и передача данных всем подписчикам
+- `onAll()` — установка глобального слушателя, вызываемого при любом событии
+- `offAll()` — удаление глобального слушателя всех событий
+- `trigger()` — создание функции, которая инициирует событие при вызове (используется для удобства)
+
+- `on<T>(eventName: string | RegExp, callback: (data: T) => void)` — подписка на событие
+- `off(eventName: string | RegExp, callback: Function)` — отписка от события
+- `emit<T>(eventName: string, data?: T)` — инициализация события
+- `onAll(callback: (event: EmitterEvent) => void)` — подписка на все события
+- `offAll()` — Сброс всех подписчиков и глобальных слушателей.
+- `trigger<T>(eventName: string, context?: Partial<T>): (data: T) => void` — возвращениет функции, которая при вызове объединяет `context` и `data`, и вызывает `emit(eventName)`.
+
+
+
+
 
 
 
