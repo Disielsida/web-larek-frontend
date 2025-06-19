@@ -47,8 +47,6 @@ yarn build
 
 ### Значение частей
 
-## 🏗 Основные части архитектуры
-
 | Часть           | Назначение                                                              |
 |-----------------|-------------------------------------------------------------------------|
 | AppStateModel | Управляет состоянием приложения и бизнес-логикой                        |
@@ -56,11 +54,71 @@ yarn build
 | EventEmitter  | Обеспечивает подписку на изменения и оповещение компонентов             |
 | UI-компоненты   | Отображают интерфейс и реагируют на изменения состояния                 |
 
-
-
 ---
 
+## Базовые классы и их интерфейсы
 
+### AppState
+Главная модель приложения. Отвечает за хранение всех данных и реализацию бизнес-логики.
+
+Интерфейс:
+```
+export interface AppState {
+  items: Map<string, Item>;
+
+  selectedProduct: Item | null;
+  basket: Map<string, BasketItem>;
+  basketTotalCount: number;
+  basketTotalPrice: string;
+  payment: PaymentMethod | null;
+  address: string | null;
+  email: string | null;
+  phone: string | null;
+  order: Order | null;
+
+  openedModal: AppStateModals;
+  isOrderReady: boolean;
+  modalErrorMessage: string | null;
+
+  loadItems(): Promise<void>;
+  orderItems(): Promise<OrderResult | null>;
+
+  selectProduct(id: string): void;
+  addToBasket(id: string): void;
+  removeFromBasket(id: string): void;
+  setPaymentMethod(method: PaymentMethod): void;
+  setAddress(address: string): void;
+  isAddresAndPaymentValid(): boolean;
+  setEmail(email: string): void;
+  setPhone(phone: string): void;
+  isContactsValid(): boolean;
+
+  formatCurrency(value: number): string;
+
+  openModal(modal: AppStateModals): void;
+  setErrorMessage(message: string | null): void;
+}
+```
+Основные поля класса:
+- `items: Map<string, Item>` — список всех товаров
+- `basket: Map<string, BasketItem>` — корзина
+- `selectedProduct: Item | null` — выбранный товар
+- `order: Order | null` — текущий заказ
+- `payment`, `email`, `phone`, `address` — данные пользователя
+- `basketTotalPrice`, `basketTotalCount` — агрегированные значения по корзине
+- `openedModal` — активное модальное окно
+
+Основные методы:
+- `loadItems()` — загрузка данных с сервера
+- `selectProduct(id: string)` — выбор товара
+- `addToBasket(id: string)` / `removeFromBasket(id: string)` — управление корзиной
+- `orderItems()` — оформление заказа
+- `setEmail()`, `setPhone()`, `setAddress()` — установка пользовательских данных
+- `setPaymentMethod()` — выбор способа оплаты
+- `isAddresAndPaymentValid()`, `isContactsValid()` — валидация форм
+- `setErrorMessage()` — установка текста ошибки
+- `formatCurrency(value: number)` — форматирование цены
+- `openModal(modal: AppStateModals)` — управление модальными окнами
 
 
 
